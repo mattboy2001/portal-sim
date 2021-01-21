@@ -30,6 +30,10 @@ public class PlayerController : MonoBehaviour
     CharacterController controller;
 
 
+    //Subscribes to hasTeleported event and identifier for teleportation
+    PortableObject portableObject;
+
+
     //Camera angle
     float cameraPitch = 0.0f;
 
@@ -49,11 +53,19 @@ public class PlayerController : MonoBehaviour
 
     Vector2 currentMouseDeltaVelocity = Vector2.zero;
 
+    private float turnRotationX;
+
+    private float turnRotationY;
+
 
     void Start()
     {
         //Get the character controller
         controller = GetComponent<CharacterController>();
+
+        portableObject = GetComponent<PortableObject>();
+
+        portableObject.HasTeleported += PortableObjectOnHasTeleported;
 
         //Hide the cursor if it is locked
         if (lockCursor)
@@ -65,11 +77,31 @@ public class PlayerController : MonoBehaviour
         
     }
 
-    void Update()
+    void FixedUpdate()
     {
         UpdateMouseMovement();
+    }
+
+    void Update()
+    {
+
+        turnRotationX += Input.GetAxis("Mouse X");
+        turnRotationY += Input.GetAxis("Mouse Y");
 
         UpdateMovement();
+    }
+
+    private void PortableObjectOnHasTeleported(Portal sender, Portal destination, Vector3 newPosition, Quaternion newRotation)
+    {
+        //Before character controller updates
+
+
+        Physics.SyncTransforms();
+    }
+
+    private void OnDestroy()
+    {
+        portableObject.HasTeleported -= PortableObjectOnHasTeleported;
     }
 
 
@@ -77,7 +109,11 @@ public class PlayerController : MonoBehaviour
     {
 
         //Get the mouse input
-        Vector2 targetMouseDelta = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
+        Vector2 targetMouseDelta = new Vector2(turnRotationX, turnRotationY);
+
+        turnRotationX = 0;
+
+        turnRotationY = 0;
 
 
         //Smooth the camera movement relative to mouse movement
