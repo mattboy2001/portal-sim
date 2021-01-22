@@ -19,6 +19,7 @@ public class Portal : MonoBehaviour
 
 
 
+
     //Portal camera
     public Camera portalCamera;
 

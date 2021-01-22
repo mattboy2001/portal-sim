@@ -596,6 +596,12 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &1301763163 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7131330916009467272, guid: 7f2d07f498c2d1c43a2655ba6553999f,
+    type: 3}
+  m_PrefabInstance: {fileID: 3582138377854080477}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1408782837
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2042,9 +2048,15 @@ PrefabInstance:
         type: 3}
       propertyPath: teleportPoint
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 2137096426}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7f2d07f498c2d1c43a2655ba6553999f, type: 3}
+--- !u!4 &2137096426 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7131330916009467272, guid: 7f2d07f498c2d1c43a2655ba6553999f,
+    type: 3}
+  m_PrefabInstance: {fileID: 2137096425}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &3582138377854080477
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2126,6 +2138,6 @@ PrefabInstance:
         type: 3}
       propertyPath: teleportPoint
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1301763163}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7f2d07f498c2d1c43a2655ba6553999f, type: 3}
