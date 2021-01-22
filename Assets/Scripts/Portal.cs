@@ -39,15 +39,16 @@ public class Portal : MonoBehaviour
     private Camera mainCamera;
 
 
-    private CameraController mainCameraController;
-
     //Vector plane for near-clipping
     private Vector4 vectorPlane;
 
 
 
+    //Hash set stores all the objects currently in the portal
     private HashSet<PortableObject> objectsInPortal = new HashSet<PortableObject>();
 
+
+    //Hash set stores all the objects that have left the portal
     private HashSet<PortableObject> objectsInPortalToRemove = new HashSet<PortableObject>();
 
     void Start()
@@ -68,7 +69,6 @@ public class Portal : MonoBehaviour
 
         mainCamera = Camera.main;
 
-        mainCameraController = mainCamera.GetComponent<CameraController>();
 
 
         //Calculate clipping plane
@@ -76,10 +76,13 @@ public class Portal : MonoBehaviour
         vectorPlane = new Vector4(plane.normal.x, plane.normal.y, plane.normal.z, plane.distance);
 
 
+
+        //Asychronously manage the objects in the portal
         StartCoroutine(WaitForFixedUpdateLoop());
     }
 
 
+    //Infinitely loops constantly checking for any objects in the portal
     private IEnumerator WaitForFixedUpdateLoop()
     {
         var waitForFixedUpdate = new WaitForFixedUpdate();
@@ -127,7 +130,7 @@ public class Portal : MonoBehaviour
             var pivotToNormalDotProduct = Vector3.Dot(directionToPivotFromTransform, normalVisible.forward);
             if (pivotToNormalDotProduct > 0)
             {
-                CameraShaker.Instance.ShakeOnce(2f, 0.1f, 0.1f, 1f);
+                CameraShaker.Instance.ShakeOnce(2f, 0.5f, 0.1f, 1f);
                 continue;
             }
 
@@ -136,11 +139,12 @@ public class Portal : MonoBehaviour
             var newRotation = TransformRotationBetweenPortals(this, targetPortal, portableObject.transform.rotation);
 
             //Magnitude, Roughness, Fade in, Fade out
+            //Shakes camera when the object moves through the portal
             CameraShaker.Instance.ShakeOnce(2f, 2.5f, 0.1f, 1f);
 
             portableObject.transform.SetPositionAndRotation(newPosition, newRotation);
 
-
+            //Fire the teleported event
             portableObject.OnHasTeleported(this, targetPortal, newPosition, newRotation);
 
 
@@ -150,6 +154,7 @@ public class Portal : MonoBehaviour
             objectsInPortalToRemove.Add(portableObject);
         }
 
+        //Remove all objects to be removed from the hash set
         foreach (var portableObject in objectsInPortalToRemove)
         {
             objectsInPortal.Remove(portableObject);
@@ -187,21 +192,23 @@ public class Portal : MonoBehaviour
         portalCamera.Render();
     }
 
-
+    //Used with the box collider to detect an object entering the portal
     private void OnTriggerEnter(Collider other)
     {
         var portableObject = other.GetComponent<PortableObject>();
         if (portableObject)
         {
+            //Add to the hash set
             objectsInPortal.Add(portableObject);
         }
     }
-
+    //Used in the event the object leaves the box collider which should only be possible by moving back from the portal (not through it)
     private void OnTriggerExit(Collider other)
     {
         var portableObject = other.GetComponent<PortableObject>();
         if (portableObject)
         {
+            //Sets up the object to be removed
             objectsInPortal.Remove(portableObject);
         }
     }

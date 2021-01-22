@@ -53,6 +53,10 @@ public class PlayerController : MonoBehaviour
 
     Vector2 currentMouseDeltaVelocity = Vector2.zero;
 
+    //Used for buffering the mouse input
+
+    //TODO interpolating
+
     private float turnRotationX;
 
     private float turnRotationY;
@@ -84,7 +88,7 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-
+        //Buffers mouse movement in update to then be used in fixed update
         turnRotationX += Input.GetAxis("Mouse X");
         turnRotationY += Input.GetAxis("Mouse Y");
 
@@ -95,7 +99,10 @@ public class PlayerController : MonoBehaviour
     {
         //Before character controller updates
 
+        //This is executed after we move through the portal
 
+
+        //Allows the player to move before the character controller updates
         Physics.SyncTransforms();
     }
 
